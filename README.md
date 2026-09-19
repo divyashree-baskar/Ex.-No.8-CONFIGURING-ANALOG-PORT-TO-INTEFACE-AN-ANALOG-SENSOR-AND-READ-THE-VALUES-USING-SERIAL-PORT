@@ -2,7 +2,6 @@
 
 
 ### Ex. No. :8 CONFIGURING ANALOG PORT TO INTEFACE AN ANALOG SENSOR AND READ THE VALUES USING SERIAL PORT
-
 ###  
 
 ## Aim: 
@@ -150,13 +149,13 @@ This module also includes a potentiometer that will fix the threshold value, & t
 
 
 ##  Program 
-
 ```
 #include "main.h"
-#include "stdio.h"
-#include <string.h>
+#include"stdio.h"
+#include<string.h>
 
 ADC_HandleTypeDef hadc1;
+
 UART_HandleTypeDef huart2;
 
 void SystemClock_Config(void);
@@ -166,43 +165,39 @@ static void MX_USART2_UART_Init(void);
 
 int main(void)
 {
-    uint16_t inp_val;
-    char msg[10];
+	uint16_t inp_val;
+	char msg[10];
 
-    HAL_Init();
-    SystemClock_Config();
+  HAL_Init();
 
-    MX_GPIO_Init();
-    MX_ADC1_Init();
-    MX_USART2_UART_Init();
+  SystemClock_Config();
 
-    while (1)
-    {
-        HAL_ADC_Start(&hadc1);
-        HAL_ADC_PollForConversion(&hadc1, 10000);
-        inp_val = HAL_ADC_GetValue(&hadc1);
-        sprintf(msg, "%hu\r\n", inp_val);
-        HAL_UART_Transmit(&huart2, (uint8_t*)msg, strlen(msg), 10000);
-        HAL_Delay(500);
-    }
+  MX_GPIO_Init();
+  MX_ADC1_Init();
+  MX_USART2_UART_Init();
+  
+  while (1)
+  {
+	  HAL_ADC_Start(&hadc1);
+	  HAL_ADC_PollForConversion(&hadc1,10000);
+	  inp_val=HAL_ADC_GetValue(&hadc1);
+	  sprintf(msg,"%hu\r\n",inp_val);
+	  HAL_UART_Transmit(&huart2, (uint8_t*)msg,strlen(msg),10000);
+	  HAL_Delay(500);
+    
+  }
+  
 }
 
-/**
-  * @brief System Clock Configuration
-  * @retval None
-  */
+
 void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Configure the main internal regulator output voltage
-  */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
-  /** Initializes the RCC Oscillators according to the specified parameters
-  * in the RCC_OscInitTypeDef structure.
-  */
+ 
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSIDiv = RCC_HSI_DIV1;
@@ -212,8 +207,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB buses clocks
-  */
+  
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
@@ -224,8 +218,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the peripherals clocks
-  */
+  
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART2|RCC_PERIPHCLK_ADC;
   PeriphClkInit.Usart2ClockSelection = RCC_USART2CLKSOURCE_PCLK1;
   PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_SYSCLK;
@@ -235,11 +228,11 @@ void SystemClock_Config(void)
   }
 }
 
+
 static void MX_ADC1_Init(void)
 {
 
   ADC_ChannelConfTypeDef sConfig = {0};
-
 
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
@@ -264,8 +257,7 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Regular Channel
-  */
+  
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
@@ -273,27 +265,12 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
-  /* USER CODE BEGIN ADC1_Init 2 */
-
-  /* USER CODE END ADC1_Init 2 */
-
+  
 }
 
-/**
-  * @brief USART2 Initialization Function
-  * @param None
-  * @retval None
-  */
 static void MX_USART2_UART_Init(void)
 {
 
-  /* USER CODE BEGIN USART2_Init 0 */
-
-  /* USER CODE END USART2_Init 0 */
-
-  /* USER CODE BEGIN USART2_Init 1 */
-
-  /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
@@ -322,61 +299,42 @@ static void MX_USART2_UART_Init(void)
     Error_Handler();
   }
 
-
 }
-
 
 static void MX_GPIO_Init(void)
 {
-
 
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
 }
 
-/* USER CODE BEGIN 4 */
-
-/* USER CODE END 4 */
-
-/**
-  * @brief  This function is executed in case of error occurrence.
-  * @retval None
-  */
 void Error_Handler(void)
 {
-  /* USER CODE BEGIN Error_Handler_Debug */
-  /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)
   {
   }
-  /* USER CODE END Error_Handler_Debug */
+
 }
 
 #ifdef  USE_FULL_ASSERT
 
 void assert_failed(uint8_t *file, uint32_t line)
 {
-
+ 
 }
 #endif
-
+ 
 ```
-
 ## Output  :
+![WhatsApp Image 2025-11-14 at 08 50 40_499baf55](https://github.com/user-attachments/assets/9f8e2edf-51d4-4653-9d56-bacbf31e4b01)
 
-<img width="591" height="1280" alt="image" src="https://github.com/user-attachments/assets/3e1e8761-d73d-4276-8a63-fcf2158ce3b1" />
+<img width="1920" height="1093" alt="image" src="https://github.com/user-attachments/assets/c16d0455-fadc-4683-99d6-5357cf32842d" />
 
-<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/19e8add4-a71f-43b1-ab67-a638b0e9b350" />
+
 
 
 ## Result :
- Hence, the configuring analog port to inteface an analog sensor and read the values using serial port runned successfully
-
-
-
-
-
-
+Thus the program verified successfully.
 
 ****
